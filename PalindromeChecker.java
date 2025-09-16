@@ -5,20 +5,20 @@ public class PalindromeChecker {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter a word: ");
-        String input = scanner.nextLine();
+        String input = scanner.nextLine().trim();
 
-        String reversed = "";
-
-        // Reverse the string
-        for (int i = input.length() - 1; i >= 0; i--) {
-            reversed += input.charAt(i);
+        if (input.isEmpty()) {
+            System.out.println("Input cannot be empty.");
+            return;
         }
 
-        // Compare original and reversed
-        if (input.equalsIgnoreCase(reversed)) {
-            System.out.println(input + " is a palindrome.");
+        String normalizedInput = input.replaceAll("[^a-zA-Z]", "").toLowerCase();
+        String reversed = new StringBuilder(normalizedInput).reverse().toString();
+
+        if (normalizedInput.equals(reversed)) {
+            System.out.println("\"" + input + "\" is a palindrome.");
         } else {
-            System.out.println(input + " is not a palindrome.");
+            System.out.println("\"" + input + "\" is not a palindrome.");
         }
 
         scanner.close();
