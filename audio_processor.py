@@ -19,7 +19,9 @@ if os.path.exists(file_path):
     db_spec = librosa.amplitude_to_db(spec)
 
     # Plot
-    matplotlib.pyplot.figure()
+    
+    librosa.display.waveshow(y, sr=sr)
+    matplotlib.pyplot.figure(figsize=(10, 3))
     librosa.display.specshow(db_spec, sr=sr, x_axis='time', y_axis='log')
     matplotlib.pyplot.title("Spectrogram")
     matplotlib.pyplot.colorbar()
