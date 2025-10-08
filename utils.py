@@ -1,10 +1,8 @@
-# utils.py
-
 import requests
 
-def fetch_data(url, timeout=5):
+def make_api_call(url, headers=None):
     try:
-        response = requests.get(url, timeout=timeout)
-        return response.json()
+        response = requests.get(url, headers=headers)
+        return response.status_code, response.json()
     except Exception as e:
-        return {"error": str(e)}
+        return 500, {"error": str(e)}
