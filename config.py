@@ -1,4 +1,4 @@
-API_BASE_URL = "https://api.example.com"
-DEFAULT_HEADERS = {
-    "Accept": "application/json"
+API_ENDPOINT = "https://api.github.com"
+DEFAULT_PARAMS = {
+    "per_page": 5
 }
