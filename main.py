@@ -6,7 +6,9 @@ import datetime
 
 # Print current timestamp
 now = datetime.datetime.now()
+five_minutes_later = now + datetime.timedelta(minutes=5)
 print("Script started at:", now)
+print("Five minutes later:", five_minutes_later)
 
 endpoint = "/status"
 url = API_BASE_URL + endpoint
