@@ -4,31 +4,30 @@ import matplotlib.pyplot
 import numpy
 import os
 
-# Extended audio analysis
-def analyze_audio_file(file_path):
-    try:
-        audio_data, sample_rate = librosa.load(file_path)
-        print("Loaded audio with", len(audio_data), "samples at", sample_rate, "Hz")
+# Load a sample audio file
+file_path = 'sample.wav'
 
-        # Generate spectrogram
-        stft_data = numpy.abs(librosa.stft(audio_data))
-        db_spectrogram = librosa.amplitude_to_db(stft_data, ref=numpy.max)
+if os.path.exists(file_path):
+    # Load the audio
+    audio_data, sample_rate = librosa.load(file_path)
 
-        # Plot and save the spectrogram
-        matplotlib.pyplot.figure(figsize=(10, 4))
-        librosa.display.specshow(db_spectrogram, sr=sample_rate, x_axis='time', y_axis='log')
-        matplotlib.pyplot.colorbar(format='%+2.0f dB')
-        matplotlib.pyplot.title('Spectrogram')
-        matplotlib.pyplot.tight_layout()
-        matplotlib.pyplot.savefig("spectrogram_output.png")
-        print("Spectrogram saved.")
+    # Calculate a short-time Fourier transform (STFT)
+    stft = numpy.abs(librosa.stft(audio_data))
 
-    except Exception as e:
-        print("Error during analysis:", e)
+    # Convert amplitude to decibels
+    db_spectrogram = librosa.amplitude_to_db(stft, ref=numpy.max)
 
-if __name__ == "__main__":
-    file_to_process = "sample.wav"
-    if os.path.exists(file_to_process):
-        analyze_audio_file(file_to_process)
-    else:
-        print("File not found:", file_to_process)
+    # Plot the spectrogram
+    matplotlib.pyplot.figure(figsize=(8, 3))
+    librosa.display.specshow(db_spectrogram, sr=sample_rate, x_axis='time', y_axis='log')
+    matplotlib.pyplot.title('Spectrogram (dB)')
+    matplotlib.pyplot.colorbar(format='%+2.0f dB')
+    matplotlib.pyplot.tight_layout()
+
+    # Save the plot
+    output_path = 'output_plot.png'
+    matplotlib.pyplot.savefig(output_path)
+    print(f"Spectrogram saved to {output_path}")
+
+else:
+    print(f"File not found: {file_path}")
