@@ -1,33 +1,28 @@
+import os
 import librosa
 import librosa.display
 import matplotlib.pyplot
 import numpy
-import os
 
-# Load a sample audio file
-file_path = 'sample.wav'
+# Setup
+audio_file = 'sample.wav'
+file_path = os.path.join('.', audio_file)
 
+# Load audio if it exists
 if os.path.exists(file_path):
-    # Load the audio
-    audio_data, sample_rate = librosa.load(file_path)
+    y, sr = librosa.load(file_path)
+    duration = librosa.get_duration(y=y, sr=sr)
+    print("Duration:", duration)
 
-    # Calculate a short-time Fourier transform (STFT)
-    stft = numpy.abs(librosa.stft(audio_data))
+    # Create spectrogram
+    spec = numpy.abs(librosa.stft(y))
+    db_spec = librosa.amplitude_to_db(spec)
 
-    # Convert amplitude to decibels
-    db_spectrogram = librosa.amplitude_to_db(stft, ref=numpy.max)
-
-    # Plot the spectrogram
-    matplotlib.pyplot.figure(figsize=(8, 3))
-    librosa.display.specshow(db_spectrogram, sr=sample_rate, x_axis='time', y_axis='log')
-    matplotlib.pyplot.title('Spectrogram (dB)')
-    matplotlib.pyplot.colorbar(format='%+2.0f dB')
-    matplotlib.pyplot.tight_layout()
-
-    # Save the plot
-    output_path = 'output_plot.png'
-    matplotlib.pyplot.savefig(output_path)
-    print(f"Spectrogram saved to {output_path}")
-
+    # Plot
+    matplotlib.pyplot.figure()
+    librosa.display.specshow(db_spec, sr=sr, x_axis='time', y_axis='log')
+    matplotlib.pyplot.title("Spectrogram")
+    matplotlib.pyplot.colorbar()
+    matplotlib.pyplot.show()
 else:
-    print(f"File not found: {file_path}")
+    print("Audio file not found.")
