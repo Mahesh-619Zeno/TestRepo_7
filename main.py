@@ -11,6 +11,10 @@ def fetch_data():
         response = requests.get(API_ENDPOINT + "/users", params=DEFAULT_PARAMS)
         response.raise_for_status()
 
+        DEFAULT_PARAMS['since'] = 1000
+        next_response = requests.get(API_ENDPOINT + "/users", params=DEFAULT_PARAMS)
+        print(f"Calling API at: {API_ENDPOINT}/users with params: {DEFAULT_PARAMS}")
+
         users = response.json()
         print(f"Fetched {len(users)} users from GitHub.")        
 
@@ -19,7 +23,7 @@ def fetch_data():
 
         filtered_df = df[df['id'] > 10000].copy()
         filtered_df['fetched_at'] = datetime.datetime.now()
-        
+
         print("Fetched users (DataFrame):")
         print(df[['login', 'id']])
 
