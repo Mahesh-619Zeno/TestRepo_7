@@ -80,12 +80,17 @@ class StudentManager:
 
     def load_students(self):
         if os.path.exists(self.file_path):
-            with open(self.file_path, "r") as f:
-                data = json.load(f)
-                self.students = [Student.from_dict(item) for item in data]
-            print("Data loaded.")
+            try:
+                with open(self.file_path, "r") as f:
+                    data = json.load(f)
+                    self.students = [Student.from_dict(item) for item in data]
+                print("Data loaded.")
+            except json.JSONDecodeError:
+                print("Warning: Data file is empty or malformed. Starting with an empty student list.")
+                self.students = []
         else:
             print("No existing data file. Starting fresh.")
+            self.students = []
 
 def display_menu():
     print("""
