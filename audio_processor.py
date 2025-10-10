@@ -14,6 +14,9 @@ if os.path.exists(file_path):
     duration = librosa.get_duration(y=y, sr=sr)
     print("Duration:", duration)
 
+    mean_amplitude = numpy.mean(numpy.abs(y))
+    print("Mean amplitude:", round(mean_amplitude, 4))
+
     # Create spectrogram
     spec = numpy.abs(librosa.stft(y))
     db_spec = librosa.amplitude_to_db(spec)
