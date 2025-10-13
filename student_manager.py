@@ -63,7 +63,7 @@ def save_student(student):
     conn.commit()
 
 def generate_large_report(students):
-    report_data = [s for s in students for _ in range(1000)]
+    report_data = [student for student in students for _ in range(1000)]
     logger.info(f"Generated report with {len(report_data)} entries")
 
 def main():
