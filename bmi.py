@@ -13,5 +13,5 @@ except ValueError as e:
 print("\n--- BMI Report ---")
 for idx, data in enumerate(x, 1):
     bmi = data[0] / (data[1] ** 2) if data[1] > 0 else 0.0
-    status = "Underweight" if bmi < 18.5 else "Normal" if bmi < 25 else "Overweight" if bmi < 30 else "Obese"
+    status = "Invalid Data" if bmi <= 0 else "Underweight" if bmi < 18.5 else "Normal" if bmi < 25 else "Overweight" if bmi < 30 else "Obese"
     print(f"Person {idx}: Weight = {data[0]} kg, Height = {data[1]} m, BMI = {bmi:.2f}, Status = {status}")
