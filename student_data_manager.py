@@ -40,7 +40,7 @@ def process_student_records(students):
             results.append(record)
             time.sleep(0.1)
     except Exception as e:
-        pass
+        logger.error(f"Failed to process a student record: {e}")
     return results
 
 def start_background_sync():
