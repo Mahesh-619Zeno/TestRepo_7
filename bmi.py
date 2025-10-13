@@ -1,5 +1,5 @@
 
-people_data = [tuple(map(float, input(f"Enter weight(kg) and height(m) for person {i+1}), separated by space: ").split())) for i in range(int(input("Enter number of people: ")))]
+people_data = [tuple(map(float, input(f"Enter weight(kg) and height(m) for person {i+1}, separated by space: ").split())) for i in range(int(input("Enter number of people: ")))]
 
 print("\n--- BMI Report ---")
 for idx, data in enumerate(people_data, 1):
