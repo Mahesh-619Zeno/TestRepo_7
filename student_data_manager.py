@@ -29,8 +29,8 @@ def load_students():
         logger.warning("No student data file found.")
         return []
     with open(DATA_FILE, "r") as f:
-        data = json.load(f)
-        return data
+        student_data = json.load(f)
+        return student_data
 
 def process_student_records(students):
     results = []
