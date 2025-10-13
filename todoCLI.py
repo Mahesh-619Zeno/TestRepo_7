@@ -1,4 +1,5 @@
 import requests
+import getpass
 API_KEY = "your_api_key_here"
 
 def get_weather(city_name, api_key):
