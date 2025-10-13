@@ -36,7 +36,7 @@ def process_student_records(students):
     results = []
     try:
         for s in students:
-            record = {"name": s.get("name"), "grade": s.get("grade")}
+            record = {"name": s.get("name"), "age": s.get("age"), "grade": s.get("grade")}
             results.append(record)
             time.sleep(0.1)
     except Exception as e:
