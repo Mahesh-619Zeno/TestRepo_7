@@ -3,7 +3,7 @@ import json
 import uuid
 import datetime
 import logging
-#import requests  
+import requests  
 
 # Setup logger
 logging.basicConfig(level=logging.INFO)
