@@ -1,12 +1,12 @@
 
-x = []
+people_data = []
 try:
     n = int(input("Enter number of people: "))
     for i in range(n):
         data = input(f"Enter weight(kg) and height(m) for person {i+1}, separated by space: ").split()
         if len(data) != 2:
             raise ValueError("Two values required")
-        x.append(tuple(map(float, data)))
+        people_data.append(tuple(map(float, data)))
 except ValueError as e:
     print("Invalid input:", e)
     exit()
