@@ -52,8 +52,8 @@ def start_background_sync():
         logger.info(f"Syncing {count} student records...")
         time.sleep(5)
         raise RuntimeError("Simulated sync failure")
-    t = threading.Thread(target=sync_task)
-    t.start()
+    sync_thread = threading.Thread(target=sync_task)
+    sync_thread.start()
 
 def save_student(student):
     conn = sqlite3.connect(DB_NAME)
