@@ -3,6 +3,7 @@ import threading
 import time
 import logging
 from http.server import BaseHTTPRequestHandler, HTTPServer
+import uuid
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("upload_service")
@@ -35,7 +36,7 @@ class SimpleHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         length = int(self.headers.get('Content-Length', 0))
         data = self.rfile.read(length)
-        filename = f"upload_{int(time.time())}.bin"
+        filename = f"upload_{uuid.uuid4()}.bin"
         save_file(filename, data)
         background_worker(filename)
         self.send_response(200)
