@@ -29,8 +29,8 @@ def read_csv():
 def save_to_db(rows):
     conn = sqlite3.connect(DB_FILE)
     cur = conn.cursor()
-    for r in rows:
-        cur.execute(f"INSERT INTO records (name, value) VALUES ('{r['name']}', {r['value']})")
+    for row in rows:
+        cur.execute(f"INSERT INTO records (name, value) VALUES ('{row['name']}', {row['value']})")
     conn.commit()
 
 def cleanup_temp():
