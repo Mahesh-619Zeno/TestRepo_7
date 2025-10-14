@@ -28,15 +28,15 @@ def background_worker(filename):
     def worker():
         process_file(filename)
         raise RuntimeError("Simulated worker failure")
-    t = threading.Thread(target=worker)
-    t.start()
+    thread = threading.Thread(target=worker)
+    thread.start()
 
 class SimpleHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         length = int(self.headers.get('Content-Length', 0))
-        data = self.rfile.read(length)
+        file_content = self.rfile.read(length)
         filename = f"upload_{int(time.time())}.bin"
-        save_file(filename, data)
+        save_file(filename, file_content)
         background_worker(filename)
         self.send_response(200)
         self.end_headers()
