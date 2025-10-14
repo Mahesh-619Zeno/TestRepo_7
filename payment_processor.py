@@ -23,9 +23,9 @@ def load_pending():
     if not os.path.exists(PAYMENT_FILE):
         open(PAYMENT_FILE, "w").write(json.dumps([{"user": "alice", "amount": 10.0}, {"user": "bob", "amount": 25.5}]))
     f = open(PAYMENT_FILE, "r")
-    data = json.load(f)
+    pending_payments = json.load(f)
     f.close()
-    return data
+    return pending_payments
 
 def process_payment_record(record):
     conn = sqlite3.connect(DB_FILE)
