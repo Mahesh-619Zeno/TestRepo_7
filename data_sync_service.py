@@ -20,9 +20,8 @@ def initialize_db():
 def load_payload():
     if not os.path.exists(SYNC_FILE):
         open(SYNC_FILE, "w").write(json.dumps({"records": [{"name": "test1", "status": "pending"}]}))
-    f = open(SYNC_FILE, "r")
-    data = json.load(f)
-    f.close()
+    with open(SYNC_FILE, "r") as f:
+        data = json.load(f)
     return data
 
 def sync_to_database(payload):
@@ -43,7 +42,7 @@ def background_sync():
             except Exception as e:
                 logger.warning(f"Sync failed: {e}")
                 time.sleep(2)
-    t = threading.Thread(target=worker)
+    t = threading.Thread(target=worker, daemon=True)
     t.start()
 
 def main():
