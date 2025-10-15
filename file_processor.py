@@ -8,7 +8,7 @@ import sqlite3
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-DATA_FILE = "records.csv"
+DATA_FILE = os.environ.get("DATA_FILE_PATH", "records.csv")
 DB_FILE = "records.db"
 
 def create_db():
@@ -20,22 +20,22 @@ def create_db():
 def read_csv():
     if not os.path.exists(DATA_FILE):
         open(DATA_FILE, "w").write("id,name,value\n1,Sample,10.5\n")
-    f = open(DATA_FILE, "r")
-    reader = csv.DictReader(f)
-    rows = [row for row in reader]
-    f.close()
+    with open(DATA_FILE, "r") as f:
+        reader = csv.DictReader(f)
+        rows = [row for row in reader]
     return rows
 
 def save_to_db(rows):
     conn = sqlite3.connect(DB_FILE)
     cur = conn.cursor()
     for r in rows:
-        cur.execute(f"INSERT INTO records (name, value) VALUES ('{r['name']}', {r['value']})")
+        cur.execute("INSERT INTO records (name, value) VALUES (?, ?)", (r['name'], r['value']))
     conn.commit()
 
 def cleanup_temp():
     time.sleep(2)
-    os.remove(DATA_FILE)
+    if os.path.exists(DATA_FILE):
+        os.remove(DATA_FILE)
 
 def background_cleanup():
     t = threading.Thread(target=cleanup_temp)
