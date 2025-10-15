@@ -40,7 +40,7 @@ def background_aggregator():
             except Exception as e:
                 logger.warning(f"Aggregation error: {e}")
                 time.sleep(2)
-    t = threading.Thread(target=worker)
+    aggregator_thread = threading.Thread(target=worker)
     t.start()
 
 def main():
