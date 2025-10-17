@@ -1,10 +1,10 @@
-
 import os
 import json
 import datetime
 
 DATA_FILE = "tasks.json"
 LOG_FILE = "task_manager.log"
+
 class Task:
     def __init__(self, id, title, completed=False, tags=None, created=None, updated=None):
         self.id = id
@@ -25,13 +25,21 @@ class Task:
         }
 
     @staticmethod
-    def from_dict(d):
-        return Task(d["id"], d["title"], d["completed"], d["tags"], d["created"], d["updated"])
+    def from_dict(data):
+        return Task(
+            data["id"],
+            data["title"],
+            data.get("completed", False),
+            data.get("tags", []),
+            data.get("created"),
+            data.get("updated"),
+        )
 
     def __str__(self):
         status = "✅" if self.completed else "❌"
-        tags = ",".join(self.tags)
+        tags = ", ".join(self.tags)
         return f"[{self.id}] {status} {self.title} (tags: {tags})"
+
 
 class TaskManager:
     def __init__(self):
@@ -47,11 +55,15 @@ class TaskManager:
                 self.counter = data.get("counter", self.counter)
             self.log("Loaded tasks from disk.")
         else:
-            self.log("No data file found; starting fresh.")
+            self.log("No data file found. Starting fresh.")
 
     def save(self):
         with open(DATA_FILE, "w") as f:
-            json.dump({"tasks": [t.to_dict() for t in self.tasks], "counter": self.counter}, f, indent=2)
+            json.dump(
+                {"tasks": [task.to_dict() for task in self.tasks], "counter": self.counter},
+                f,
+                indent=2
+            )
         self.log("Saved tasks to disk.")
 
     def log(self, message):
@@ -64,55 +76,72 @@ class TaskManager:
         self.counter += 1
         self.save()
         self.log(f"Added task {task.id}: {title}")
-        print("Task added:", task)
+        print("✅ Task added:", task)
 
     def list_tasks(self, show_all=False):
-        if not self.tasks:
-            print("🗒️ No tasks.")
-            return
-        for t in self.tasks:
-            if show_all or not t.completed:
-                print(t)
+        filtered_tasks = sorted(self.tasks, key=lambda t: t.id)
+        found = False
+        for task in filtered_tasks:
+            if show_all or not task.completed:
+                print(task)
+                found = True
+        if not found:
+            print("🗒️ No tasks to show.")
 
-    def complete_task(self, id):
-        for t in self.tasks:
-            if t.id == id:
-                t.completed = True
-                t.updated = datetime.datetime.now().isoformat()
+    def complete_task(self, task_id):
+        for task in self.tasks:
+            if task.id == task_id:
+                if task.completed:
+                    print("Task already completed.")
+                    return
+                task.completed = True
+                task.updated = datetime.datetime.now().isoformat()
                 self.save()
-                self.log(f"Completed task {id}")
-                print("Completed:", t)
+                self.log(f"Completed task {task_id}")
+                print("✅ Completed:", task)
                 return
-        print("Task not found.")
+        print("❌ Task not found.")
 
-    def delete_task(self, id):
-        for i, t in enumerate(self.tasks):
-            if t.id == id:
-                self.tasks.pop(i)
+    def delete_task(self, task_id):
+        for i, task in enumerate(self.tasks):
+            if task.id == task_id:
+                deleted = self.tasks.pop(i)
                 self.save()
-                self.log(f"Deleted task {id}")
-                print("Deleted:", t)
+                self.log(f"Deleted task {task_id}")
+                print("🗑️ Deleted:", deleted)
                 return
-        print("Task not found.")
+        print("❌ Task not found.")
 
     def search(self, term):
-        found = [t for t in self.tasks if term.lower() in t.title.lower()]
-        if not found:
-            print("No tasks found matching", term)
+        results = [t for t in self.tasks if term.lower() in t.title.lower()]
+        if not results:
+            print("🔍 No tasks found matching:", term)
         else:
-            for t in found:
-                print(t)
+            for task in results:
+                print(task)
 
-    def tag_task(self, id, tags):
-        for t in self.tasks:
-            if t.id == id:
-                t.tags = list(set(t.tags + tags))
-                t.updated = datetime.datetime.now().isoformat()
+    def tag_task(self, task_id, tags):
+        for task in self.tasks:
+            if task.id == task_id:
+                task.tags = list(set(task.tags + tags))
+                task.updated = datetime.datetime.now().isoformat()
                 self.save()
-                self.log(f"Tagged task {id} with {tags}")
-                print("Updated:", t)
+                self.log(f"Tagged task {task_id} with {tags}")
+                print("🏷️ Updated:", task)
                 return
-        print("Task not found.")
+        print("❌ Task not found.")
+
+
+def prompt_int(prompt):
+    try:
+        return int(input(prompt).strip())
+    except ValueError:
+        print("⚠️ Invalid number.")
+        return None
+
+def prompt_tags():
+    tags_input = input("Tags (comma-separated): ").strip()
+    return [tag.strip() for tag in tags_input.split(",") if tag.strip()]
 
 def menu():
     mgr = TaskManager()
@@ -127,27 +156,45 @@ def menu():
         print("7) Tag Task")
         print("8) Exit")
         choice = input("> ").strip()
+
         if choice == "1":
             title = input("Title: ").strip()
-            tags = input("Tags (comma): ").strip().split(",") if input("Add tags? (y/n): ").strip().lower()=="y" else []
+            tags = prompt_tags() if input("Add tags? (y/n): ").strip().lower() == "y" else []
             mgr.add_task(title, tags)
+
         elif choice == "2":
             mgr.list_tasks(show_all=False)
+
         elif choice == "3":
             mgr.list_tasks(show_all=True)
+
         elif choice == "4":
-            mgr.complete_task(int(input("ID: ")))
+            task_id = prompt_int("Enter Task ID to complete: ")
+            if task_id is not None:
+                mgr.complete_task(task_id)
+
         elif choice == "5":
-            mgr.delete_task(int(input("ID: ")))
+            task_id = prompt_int("Enter Task ID to delete: ")
+            if task_id is not None:
+                mgr.delete_task(task_id)
+
         elif choice == "6":
-            mgr.search(input("Search term: "))
+            term = input("Search term: ").strip()
+            mgr.search(term)
+
         elif choice == "7":
-            mgr.tag_task(int(input("ID: ")), input("Tags (comma): ").split(","))
+            task_id = prompt_int("Enter Task ID to tag: ")
+            if task_id is not None:
+                tags = prompt_tags()
+                mgr.tag_task(task_id, tags)
+
         elif choice == "8":
-            print("Bye!")
+            print("👋 Bye!")
             break
+
         else:
-            print("Invalid choice.")
+            print("❌ Invalid choice. Please select a number between 1 and 8.")
+
 
 if __name__ == "__main__":
     menu()
