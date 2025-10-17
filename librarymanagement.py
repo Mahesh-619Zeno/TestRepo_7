@@ -44,7 +44,7 @@ class Library:
         if not self.members:
             print("No members registered.")
             return
-        for m in self.members.values():
+        for member in self.members.values():
             print(m)
 
     def issue_book(self, member_name, book_id):
