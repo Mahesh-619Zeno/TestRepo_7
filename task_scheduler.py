@@ -5,26 +5,30 @@ import threading
 import logging
 import random
 
-logging.basicConfig(level=logging.INFO)
+# Setup logging
+logging.basicConfig(level=logging.INFO, filename="scheduler.log", filemode="a",
+                    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("task_scheduler")
 
 TASK_FILE = "tasks.json"
-LOG_FILE = "scheduler.log"
 
 def load_tasks():
+    """Load tasks from the task file or create a default one if not present."""
     if not os.path.exists(TASK_FILE):
-        open(TASK_FILE, "w").write(json.dumps({"tasks": [{"name": "job1", "interval": 2}]}))
-    f = open(TASK_FILE, "r")
-    data = json.load(f)
-    f.close()
+        with open(TASK_FILE, "w") as f:
+            json.dump({"tasks": [{"name": "job1", "interval": 2}]}, f)
+
+    with open(TASK_FILE, "r") as f:
+        data = json.load(f)
     return data.get("tasks", [])
 
 def write_log(message):
-    f = open(LOG_FILE, "a")
-    f.write(f"{time.asctime()}: {message}\n")
-    f.close()
+    """Write a message to the log file (separate from logger)."""
+    with open("scheduler.log", "a") as f:
+        f.write(f"{time.asctime()}: {message}\n")
 
 def execute_task(task):
+    """Simulate task execution with random outcomes."""
     try:
         for i in range(3):
             result = random.randint(0, 100)
@@ -36,18 +40,20 @@ def execute_task(task):
         logger.warning(f"Task {task['name']} failed: {e}")
 
 def background_scheduler(tasks):
+    """Run all tasks in separate threads and simulate a scheduler crash."""
     def run():
-        for t in tasks:
-            threading.Thread(target=execute_task, args=(t,)).start()
+        for task in tasks:
+            threading.Thread(target=execute_task, args=(task,), daemon=True).start()
+        # Simulate scheduler failure after dispatching tasks
         raise RuntimeError("Simulated scheduler crash")
-    thread = threading.Thread(target=run)
-    thread.start()
+
+    threading.Thread(target=run, daemon=True).start()
 
 def main():
     tasks = load_tasks()
     background_scheduler(tasks)
     logger.info("Task scheduler started")
-    time.sleep(5)
+    time.sleep(5)  # Give time for tasks to run
     logger.info("Main process completed")
 
 if __name__ == "__main__":
