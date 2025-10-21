@@ -12,12 +12,13 @@ logger = logging.getLogger("task_scheduler")
 # Constants
 TASK_FILE = "tasks.json"
 LOG_FILE = "scheduler.log"
+DEFAULT_TASKS = {"tasks": [{"name": "job1", "interval": 2}]}
 
 def load_tasks():
     """Load tasks from a JSON file. Creates a default task file if it doesn't exist."""
     if not os.path.exists(TASK_FILE):
         with open(TASK_FILE, "w") as f:
-            json.dump({"tasks": [{"name": "job1", "interval": 2}]}, f)
+            json.dump(DEFAULT_TASKS, f, indent=2)
 
     with open(TASK_FILE, "r") as f:
         data = json.load(f)
