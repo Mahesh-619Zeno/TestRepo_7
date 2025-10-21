@@ -16,7 +16,11 @@ def download_weights():
 
     print("[DEBUG]: downloading tokenizer")
 
-    AutoTokenizer.from_pretrained(name)
+    try:
+        AutoTokenizer.from_pretrained(name)
+    except Exception as e:
+        print(f"[ERROR]: Failed to download tokenizer for '{name}': {e}")
+        raise
     
     print("[DEBUG]: add done")
     
