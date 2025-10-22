@@ -45,7 +45,7 @@ def get_weather(city_name):
 
     try:
         logger.debug(f"Requesting weather for {city_name}")
-        response = requests.get(base_url, params=params)
+        response = requests.get(base_url, params=params, timeout=10)
         response.raise_for_status()
         return response.json()
     except requests.exceptions.RequestException as e:
