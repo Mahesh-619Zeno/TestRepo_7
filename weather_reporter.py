@@ -21,7 +21,7 @@ def get_weather(city_name):
     }
 
     try:
-        response = requests.get(BASE_URL, params=params)
+        response = requests.get(BASE_URL, params=params, timeout=10)
         response.raise_for_status()
         return response.json()
     except requests.exceptions.HTTPError as http_err:
