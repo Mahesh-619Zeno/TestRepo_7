@@ -1,31 +1,60 @@
+import os
 import sys
+import logging
 import requests
 from datetime import datetime
 
-BASE_URL = "http://api.openweathermap.org/data/2.5/weather"
+# ------------------------------
+# Load Configuration from Environment
+# ------------------------------
+APP_ENV = os.getenv("APP_ENV", "dev")
+API_KEY = os.getenv("WEATHER_API_KEY")
+ENABLE_LOGGING = os.getenv("ENABLE_LOGGING", "false").lower() == "true"
+DEFAULT_CITY = os.getenv("DEFAULT_CITY", "New York")
 
+# ------------------------------
+# Setup Logging
+# ------------------------------
+if ENABLE_LOGGING:
+    logging.basicConfig(
+        level=logging.DEBUG if APP_ENV == "dev" else logging.INFO,
+        format='%(asctime)s [%(levelname)s] %(message)s',
+        handlers=[logging.StreamHandler(sys.stdout)]
+    )
+    logger = logging.getLogger(__name__)
+else:
+    logger = logging.getLogger(__name__)
+    logger.addHandler(logging.NullHandler())
+
+# ------------------------------
+# Utility Functions
+# ------------------------------
 def kelvin_to_celsius(kelvin):
     return kelvin - 273.15
 
-def get_weather(city_name, api_key):
+def get_weather(city_name):
+    base_url = "http://api.openweathermap.org/data/2.5/weather"
     params = {
         'q': city_name,
-        'appid': api_key
+        'appid': API_KEY
     }
 
+    if not API_KEY:
+        logger.error("Missing WEATHER_API_KEY.")
+        raise ValueError("API key not set.")
+
     try:
-        response = requests.get(BASE_URL, params=params)
+        logger.debug(f"Requesting weather for {city_name}")
+        response = requests.get(base_url, params=params)
         response.raise_for_status()
         return response.json()
-    except requests.exceptions.HTTPError as http_err:
-        print(f"HTTP error occurred: {http_err}")
-    except requests.exceptions.RequestException as err:
-        print(f"Error: {err}")
-    return None
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Request failed: {e}")
+        return None
 
 def print_weather_info(data):
     if not data:
-        print("No data to display.")
+        print("No weather data available.")
         return
 
     try:
@@ -39,38 +68,38 @@ def print_weather_info(data):
         time = datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
         print("\n--- Weather Report ---")
-        print(f"Location   : {city}, {country}")
-        print(f"Time       : {time}")
-        print(f"Temperature: {temp:.2f}°C")
-        print(f"Weather    : {weather.capitalize()}")
-        print(f"Humidity   : {humidity}%")
-        print(f"Wind Speed : {wind_speed} m/s")
+        print(f"Environment : {APP_ENV.upper()}")
+        print(f"Location    : {city}, {country}")
+        print(f"Time        : {time}")
+        print(f"Temperature : {temp:.2f}°C")
+        print(f"Weather     : {weather.capitalize()}")
+        print(f"Humidity    : {humidity}%")
+        print(f"Wind Speed  : {wind_speed} m/s")
         print("----------------------\n")
     except KeyError as e:
-        print(f"Unexpected data format. Missing key: {e}")
+        logger.error(f"Missing data field: {e}")
+        print("Failed to display weather info.")
 
-def run_cli():
-    print("Welcome to the Weather Reporter CLI")
-    print("Type 'exit' to quit.\n")
+# ------------------------------
+# Main CLI
+# ------------------------------
+def run():
+    print(f"Running in '{APP_ENV}' environment.")
+    
+    city = input(f"Enter city name (or press Enter for default: {DEFAULT_CITY}): ").strip()
+    if not city:
+        city = DEFAULT_CITY
 
-    api_key = input("Enter your OpenWeatherMap API key: ").strip()
-    if not api_key:
-        print("API key is required.")
-        sys.exit(1)
+    logger.info(f"Using city: {city}")
+    data = get_weather(city)
+    print_weather_info(data)
 
-    while True:
-        city = input("Enter city name: ").strip()
-        if city.lower() == 'exit':
-            print("Goodbye!")
-            break
-
-        if not city:
-            print("Please enter a valid city name.")
-            continue
-
-        print("Fetching weather data...")
-        data = get_weather(city, api_key)
-        print_weather_info(data)
-
+# ------------------------------
+# Entry Point
+# ------------------------------
 if __name__ == "__main__":
-    run_cli()
+    try:
+        run()
+    except Exception as e:
+        logger.exception("Application error.")
+        sys.exit(1)
