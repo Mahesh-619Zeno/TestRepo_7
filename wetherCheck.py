@@ -23,7 +23,7 @@ def get_weather(city_name, api_key):
             print("❌ City not found or API error:", data.get("message", "Unknown error"))
 
     except requests.exceptions.RequestException as e:
-        print("❌ Network error:", e)
+        print("❌ A network error occurred. Please check your connection and try again.")
 
 if __name__ == "__main__":
     print("=== Weather Checker ===")
