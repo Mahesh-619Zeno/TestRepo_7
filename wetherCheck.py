@@ -11,7 +11,7 @@ def get_weather(city_name, api_key):
 
     try:
         response = requests.get(base_url, params=params, timeout=10)
-        data = response.json()
+        weather_data = response.json()
 
         if response.status_code == 200:
             print(f"\nWeather in {data['name']}, {data['sys']['country']}:")
