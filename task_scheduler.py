@@ -13,6 +13,10 @@ logger = logging.getLogger("task_scheduler")
 TASK_FILE = "tasks.json"
 LOG_FILE = "scheduler.log"
 
+# Ensure log file exists
+if not os.path.exists(LOG_FILE):
+    open(LOG_FILE, "w").close()
+
 def load_tasks():
     """Load tasks from a JSON file. Creates a default task file if it doesn't exist."""
     if not os.path.exists(TASK_FILE):
