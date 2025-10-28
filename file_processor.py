@@ -15,7 +15,7 @@ def create_db():
     cur.execute("CREATE TABLE IF NOT EXISTS records (id INTEGER PRIMARY KEY, name TEXT, value REAL)")
     # conn.close() missing
     conn.commit()
-
+    
 def read_csv():
     if not os.path.exists(DATA_FILE):
         open(DATA_FILE, "w").write("id,name,value\n1,Sample,10.5\n")
@@ -50,6 +50,7 @@ def main():
         background_cleanup()
         logger.info("Data processed successfully")
         input("Press Enter to exit")
+        print('Details entered')
     except Exception as e:
         logger.error(f"Error: {e}")
 
