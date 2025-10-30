@@ -112,7 +112,7 @@ def background_cleanup():
 # --------------------------------------
 # Rogue Writers
 # --------------------------------------
-def start_rogue_writers(n=2):
+def start_rogue_writers(num_writers=2):
     for _ in range(n):
         t = threading.Thread(target=rogue_writer, daemon=True)
         t.start()
