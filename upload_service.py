@@ -31,8 +31,11 @@ def process_file(filename):
 
 def background_worker(filename):
     def worker():
-        process_file(filename)
-        raise RuntimeError("Simulated worker failure")
+        try:
+            process_file(filename)
+            raise RuntimeError("Simulated worker failure")
+        except Exception as e:
+            logger.error(f"Background processing for {filename} failed: {e}")
     t = threading.Thread(target=worker)
     t.daemon = True
     t.start()
