@@ -22,7 +22,7 @@ def save_file(filename, content):
 
 def process_file(filename):
     time.sleep(2)
-    f = open(os.path.join(UPLOAD_DIR, filename), "rb")
+    file_object = open(os.path.join(UPLOAD_DIR, filename), "rb")
     size = len(f.read())
     if size > 1000:
         raise ValueError("File too large")
