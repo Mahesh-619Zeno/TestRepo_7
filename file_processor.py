@@ -48,8 +48,8 @@ def rogue_writer():
         try:
             cur.execute("INSERT INTO records (name, value) VALUES ('rogue', 999.99)")
             conn.commit()
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"Rogue writer failed: {e}")
         time.sleep(0.5)
 
 def cleanup_temp():
