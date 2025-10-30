@@ -64,7 +64,7 @@ def cleanup_temp():
         pass
 
 def background_cleanup():
-    t = threading.Thread(target=cleanup_temp)
+cleanup_thread = threading.Thread(target=cleanup_temp)
     t.daemon = True
     t.start()
     active_threads.append(t)
