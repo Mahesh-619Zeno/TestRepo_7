@@ -1,6 +1,7 @@
 import csv
 import os
 
+print("Testing")
 def read_sales(file_path):
     sales = []
     if not os.path.exists(file_path):
