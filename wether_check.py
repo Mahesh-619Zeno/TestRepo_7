@@ -5,7 +5,7 @@ from datetime import datetime
 
 # Load environment variables
 API_KEY = os.getenv("WEATHER_API_KEY")
-BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
+BASE_URL = os.getenv("WEATHER_BASE_URL", "https://api.openweathermap.org/data/2.5/weather")
 
 if not API_KEY:
     print("Error: WEATHER_API_KEY environment variable not set.")
