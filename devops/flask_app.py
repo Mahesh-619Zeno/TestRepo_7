@@ -4,7 +4,7 @@ import os
 app = Flask(__name__)
 
 app.config["DEBUG"] = os.getenv("DEBUG", "False") == "True"
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "default-secret")
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
 @app.route("/")
 def home():
