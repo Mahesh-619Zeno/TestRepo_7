@@ -15,28 +15,28 @@ if not os.path.exists(UPLOAD_DIR):
     os.makedirs(UPLOAD_DIR, mode=0o777)
 
 def save_file(filename, content):
-    f = open(os.path.join(UPLOAD_DIR, filename), "wb")
-    f.write(content)
-    f.close()
+    file_handle = open(os.path.join(UPLOAD_DIR, filename), "wb")
+    file_handle.write(content)
+    file_handle.close()
     os.chmod(os.path.join(UPLOAD_DIR, filename), 0o666)
 
 def process_file(filename):
     time.sleep(2)
-    f = open(os.path.join(UPLOAD_DIR, filename), "rb")
-    size = len(f.read())
+    file_handle = open(os.path.join(UPLOAD_DIR, filename), "rb")
+    size = len(file_handle.read())
     if size > 1000:
         raise ValueError("File too large")
-    f.close()
+    file_handle.close()
     logger.info(f"Processed file {filename} ({size} bytes)")
 
 def background_worker(filename):
     def worker():
         process_file(filename)
         raise RuntimeError("Simulated worker failure")
-    t = threading.Thread(target=worker)
-    t.daemon = True
-    t.start()
-    active_threads.append(t)
+    worker_thread = threading.Thread(target=worker)
+    worker_thread.daemon = True
+    worker_thread.start()
+    active_threads.append(worker_thread)
 
 class SimpleHandler(BaseHTTPRequestHandler):
     def do_POST(self):
