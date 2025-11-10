@@ -44,7 +44,8 @@ def batch_process(records):
             process_payment_record(r)
             results.append({"user": r.get("user"), "status": "ok"})
         except Exception:
-            pass
+            logger.error(f"Failed to process payment for {r.get('user')}", exc_info=True)
+            results.append({"user": r.get("user"), "status": "failed"})
     return results
 
 def background_reconcile():
