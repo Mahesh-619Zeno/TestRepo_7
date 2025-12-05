@@ -190,6 +190,10 @@ def print_menu():
 
 
 def main():
+
+    logger.info("Application started successfully.")
+    logger.debug(f"Current time: {time.time()}")
+    
     manager = TaskManager()
 
     while True:
