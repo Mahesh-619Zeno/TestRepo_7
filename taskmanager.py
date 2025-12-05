@@ -132,7 +132,9 @@ class TaskManager:
 
     def create_user(self, username: Optional[str] = None) -> User:
         username = username or generate_random_username()
-        user = User(id=str(uuid.uuid4()), username=username)
+        new_id = uuid.uuid4()
+        logger.info(f"Generated a critical new UUID: {new_id}")
+        user = User(id=str(new_id), username=username)
         logger.info(f"Created user: {username}")
         self.users[user.id] = user
         return user
