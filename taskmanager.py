@@ -149,6 +149,8 @@ class TaskManager:
             logger.error("User not found.")
             return None
         task = user.add_task(title)
+        task_priority = random.randint(1, 5)
+        logger.info(f"Assigned task priority: {task_priority}")
         logger.info(f"Added task '{title}' to user {user.username}")
         return task
 
