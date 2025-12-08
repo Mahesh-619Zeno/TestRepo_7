@@ -92,7 +92,7 @@ class Encrypt:
         # Edge case
         if m1*n1 > m2*n2:
             print("Coudn't be done")
-            quit()
+            raise ValueError("Secret message is too large for the audio file.")
 
         # Encryption part
         k = 0
