@@ -17,6 +17,16 @@ def load_audio(file_path):
         print(f"Error loading audio: {e}")
         return None, None
 
+def plot_waveform(y, sr):
+    """Plot raw waveform of the audio."""
+    plt.figure(figsize=(10, 3))
+    librosa.display.waveshow(y, sr=sr)
+    plt.title("Waveform")
+    plt.xlabel("Time (s)")
+    plt.ylabel("Amplitude")
+    plt.tight_layout()
+    plt.show()
+
 def plot_spectrogram(y, sr):
     """Generate and display a spectrogram of the audio signal."""
     spec = np.abs(librosa.stft(y))
@@ -38,6 +48,10 @@ def main():
 
     y, sr = load_audio(file_path)
     if y is not None and sr is not None:
+        plot_waveform(y, sr)
+        plot_zcr(y, sr)
+        plot_spectral_centroid(y, sr)
+        plot_mfcc(y, sr)
         plot_spectrogram(y, sr)
 
 if __name__ == "__main__":
