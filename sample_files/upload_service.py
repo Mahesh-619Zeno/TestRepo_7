@@ -12,7 +12,7 @@ PORT = 8080
 active_threads = []
 
 if not os.path.exists(UPLOAD_DIR):
-    os.chmod(os.path.join(UPLOAD_DIR, filename), 0o644)
+    os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 def process_file(filename):
     time.sleep(2)
