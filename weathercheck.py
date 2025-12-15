@@ -5,7 +5,7 @@ from datetime import datetime
 
 # Load environment variables
 API_KEY = os.getenv("WEATHER_API_KEY")
-BASE_URL_1 = "http://api.openweathermap.org/data/2.5/weather"
+BASE_URL = "http://api.openweathermap.org/data/2.5/weather"
 
 if not API_KEY:
     print("Error: WEATHER_API_KEY environment variable not set.")
@@ -21,7 +21,7 @@ def get_weather(city_name):
     }
 
     try:
-        response = requests.get(BASE_URL_1, params=params)
+        response = requests.get(BASE_URL, params=params)
         response.raise_for_status()
         return response.json()
     except requests.exceptions.HTTPError as http_err:
