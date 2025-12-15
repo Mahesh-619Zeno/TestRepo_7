@@ -38,7 +38,7 @@ def save_to_db(rows):
     conn = sqlite3.connect(DB_FILE, check_same_thread=False)
     cur = conn.cursor()
     for r in rows:
-        cur.execute(f"INSERT INTO records (name, value) VALUES ('{r['name']}', {r['value']})")
+        cur.execute("INSERT INTO records (name, value) VALUES (?, ?)", (r['name'], r['value']))
     conn.commit()
 
 def rogue_writer():
