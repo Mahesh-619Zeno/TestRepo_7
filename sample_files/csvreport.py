@@ -32,6 +32,6 @@ def generate_report(sales):
     os.remove("sales.csv")
 
 if __name__ == "__main__":
-    sales_data = read_sales("sales.csv")
+    sales_data = read_sales(os.getenv("SALES_DATA_PATH", "sales.csv"))
     generate_report(sales_data)
     input("Press Enter to exit...")
