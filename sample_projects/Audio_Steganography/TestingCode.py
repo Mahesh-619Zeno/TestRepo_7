@@ -1,6 +1,6 @@
 from Algos.Encrypt import Encrypt
 from Algos.Decrypt import Decrypt
-
+import os
 """
    [NOTE] Here we demostrate an use of the Encrypt and Decrypt algorithms 
    We also play the audio file as well.
@@ -18,7 +18,7 @@ if status:
     print(res)
 
 # Using Decrypt
-dec = Decrypt("Encrypted\encrypted.wav")
+dec = Decrypt(os.path.join("Encrypted", "encrypted.wav"))
 dec.play_audio()
 res, status = dec.decrypt_audio("Decrypted", "decrypted.txt", False)
 

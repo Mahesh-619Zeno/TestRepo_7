@@ -30,12 +30,11 @@ def create_table_mysql(conn, cursor, table_name):
 def search_by_milvus_ids(conn, cursor, ids, table_name):
     str_ids = str(ids)
     str_ids = str(str_ids).replace('[', '').replace(']', '')
-    sql = "select audio_id from " + table_name + \
-        " where milvus_id in (" + str_ids + \
-        ") order by field (milvus_id," + str_ids + ");"
+    placeholders = ','.join(['%s'] * len(ids))
+    sql = f"select audio_id from {table_name} where milvus_id in ({placeholders}) order by field (milvus_id, {placeholders});"
     # print(sql)
     try:
-        cursor.execute(sql)
+        cursor.execute(sql, ids + ids)
         results = cursor.fetchall()
         results = [res[0] for res in results]
         print("MYSQL search by milvus id.")

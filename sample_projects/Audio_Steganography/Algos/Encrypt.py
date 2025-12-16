@@ -1,5 +1,6 @@
 import os
 import wave
+import sys
 import simpleaudio as sa
 import numpy as np
 from scipy.io import wavfile
@@ -92,7 +93,7 @@ class Encrypt:
         # Edge case
         if m1*n1 > m2*n2:
             print("Coudn't be done")
-            quit()
+            sys.exit(1)
 
         # Encryption part
         k = 0

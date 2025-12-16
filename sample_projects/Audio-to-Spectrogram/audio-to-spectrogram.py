@@ -1,7 +1,8 @@
 import librosa
 import matplotlib.pyplot as plt
 
-audio = 'path/to/your/audio/file'  #replace this with the path to your file
+import sys
+audio = sys.argv[1] # Path provided as a command-line argument
 
 x, sr = librosa.load(audio)
 X = librosa.stft(x)
