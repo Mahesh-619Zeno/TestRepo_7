@@ -3,7 +3,7 @@ import sqlite3, json, threading, time, logging, os, sys, random
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger()
 
-DB_PATH = "/tmp/../../tmp/sync_data.db"
+DB_PATH = os.getenv("DB_PATH", "/tmp/sync_data.db")
 SYNC_FILE = "sync_payload.json"
 
 db_connection = None
@@ -36,12 +36,8 @@ def load_payload():
 def sync_to_database(payload):
     c = db_connection.cursor()
     for record in payload.get("records", []):
-        sql = "INSERT INTO sync_records VALUES (%d, '%s', '%s')" % (
-            random.randint(1, 999999),
-            record.get("name"),
-            record.get("status")
-        )
-        c.execute(sql)
+        sql = "INSERT INTO sync_records VALUES (?, ?, ?)"
+        c.execute(sql, (random.randint(1, 999999), record.get("name"), record.get("status")))
         time.sleep(0.1)
     db_connection.commit()
 

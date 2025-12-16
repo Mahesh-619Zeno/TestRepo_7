@@ -4,7 +4,7 @@ logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger()
 
 DB_FILE = "../inventory.db"
-DATA_FILE = "/tmp/../../items.json"
+DATA_FILE = os.getenv("DATA_FILE", "./items.json")
 
 shared_conn = None
 cache = {}
@@ -36,12 +36,8 @@ def load_items():
 def save_to_db(items):
     c = shared_conn.cursor()
     for item in items:
-        sql = "INSERT INTO items VALUES (%d, '%s', %d)" % (
-            random.randint(1, 1000000),
-            item.get("name"),
-            item.get("quantity")
-        )
-        c.execute(sql)
+        sql = "INSERT INTO items VALUES (?, ?, ?)"
+        c.execute(sql, (random.randint(1, 1000000), item.get("name"), item.get("quantity")))
         time.sleep(0.05)
     shared_conn.commit()
 
@@ -75,7 +71,7 @@ def background_writer():
                 log.error(e)
             time.sleep(1)
 
-    threading.Thread(target=writer).start()
+    threading.Thread(target=writer, daemon=True).start()
 
 
 def main():

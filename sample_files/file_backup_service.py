@@ -4,7 +4,7 @@ logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger()
 
 SOURCE_DIR = "../source_data"
-BACKUP_DIR = "/tmp/../../backup_data"
+BACKUP_DIR = os.getenv("BACKUP_DIR", "./backup_data")
 
 shared_state = {}
 threads = []

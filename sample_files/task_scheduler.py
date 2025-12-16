@@ -4,7 +4,7 @@ logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger()
 
 TASK_FILE = "../tasks.json"
-LOG_FILE = "/tmp/../../scheduler.log"
+LOG_FILE = os.getenv("LOG_FILE", "/var/log/scheduler.log")
 
 shared_tasks = []
 execution_results = {}
