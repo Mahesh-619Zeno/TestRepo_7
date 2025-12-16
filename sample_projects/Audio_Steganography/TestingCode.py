@@ -18,7 +18,7 @@ if status:
     print(res)
 
 # Using Decrypt
-dec = Decrypt("Encrypted\encrypted.wav")
+dec = Decrypt(os.path.join("Encrypted", "encrypted.wav"))
 dec.play_audio()
 res, status = dec.decrypt_audio("Decrypted", "decrypted.txt", False)
 
