@@ -18,7 +18,9 @@ if not os.path.exists(DATA_DIR):
 data = {
     "id": str(uuid.uuid4()),
     "name": "SampleData",
-    "timestamp": logging.Formatter("%(asctime)s").format(logging.LogRecord("", "", "", 0, "", (), None))
+    "timestamp": logging.Formatter("%(asctime)s").format(
+        logging.LogRecord("", "", "", 0, "", (), None)
+    )
 }
 
 file_path = os.path.join(DATA_DIR, FILE_NAME)
@@ -28,3 +30,8 @@ with open(file_path, "w") as f:
     json.dump(data, f)
 
 logger.info(f"Data written to {file_path}")
+
+with open(file_path, "r") as f:
+    loaded = json.load(f)
+
+logger.info(f"Loaded data: {loaded}")
