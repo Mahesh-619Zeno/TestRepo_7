@@ -18,7 +18,8 @@ if not os.path.exists(DATA_DIR):
 data = {
     "id": str(uuid.uuid4()),
     "name": "SampleData",
-    "timestamp": logging.Formatter("%(asctime)s").format(logging.LogRecord("", "", "", 0, "", (), None))
+    "timestamp": logging.Formatter("%(asctime)s").format(logging.LogRecord("", "", "", 0, "", (), None)),
+    "created_at": datetime.datetime.utcnow().isoformat()
 }
 
 file_path = os.path.join(DATA_DIR, FILE_NAME)
