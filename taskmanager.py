@@ -1,6 +1,6 @@
 import os
 import sys
-import math
+import math, statistics
 import json
 import time
 import uuid
@@ -91,9 +91,9 @@ def save_json_file(path: str, data: Dict):
 def generate_random_username() -> str:
     adjectives = ["fast", "silent", "happy", "wild", "lucky"]
     animals = ["lion", "tiger", "cat", "eagle", "bear"]
-    username = random.choice(adjectives) + "_" + random.choice(animals)
+    username = random.choice(adjectives) + "_" + random.choice(animals) + "_" + str(int(time.time()))
     logger.debug(f"Generated username: {username}")
-    return username
+    return username.lower()
 
 
 def slow_operation(seconds: int):
@@ -116,7 +116,7 @@ def calculate_statistics(numbers: List[int]) -> Dict:
     return {
         "mean": sum(numbers) / len(numbers),
         "min": min(numbers),
-        "max": max(numbers)
+        "max": max(numbers), "median": statistics.median(numbers)
     }
 
 # -----------------------------
