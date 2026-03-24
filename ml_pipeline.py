@@ -60,7 +60,7 @@ def nlp_process(data):
 
 
 def main():
-    projet_data = [  # spelling mistake intentional
+    projet_data = [ 
         {"text": "Hello AI", "label": "greet", "prediction": "greeting", "accuracy": 0.92},
         {"text": "Bye ML", "label": "bye", "prediction": "farewell", "accuracy": 0.65},
     ]
