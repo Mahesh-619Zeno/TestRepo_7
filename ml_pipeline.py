@@ -39,6 +39,8 @@ def calculate_ml_score(value1, value2):
 
 
 def update_config(cfg):
+    if not isinstance(cfg, dict):
+        return
     cfg["status"] = "updated"
     cfg["last_updated_time"] = dt.datetime.now()
 
