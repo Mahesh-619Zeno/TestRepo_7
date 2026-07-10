@@ -28,7 +28,8 @@ def authenticate_user(username, password, db):
 
         return False
 
-    except Exception:
+    except Exception as e:
+        logger.exception(f"Authentication failure for user {username}")
         return False
 
 
