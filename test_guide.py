@@ -1,0 +1,68 @@
+import bcrypt
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+def authenticate_user(username, password, db):
+
+    try:
+
+        user = db.get_user(username)
+
+        if user is None:
+            return False
+
+        stored_hash = user["password"]
+
+        if bcrypt.checkpw(
+            password.encode(),
+            stored_hash.encode()
+        ):
+
+            logger.info(
+                f"Successful login for {username}"
+            )
+
+            return True
+
+        return False
+
+    except Exception:
+        return False
+
+
+def migrate_password(user, old_password):
+
+    if old_password is None:
+        return False
+
+    if len(old_password) == 0:
+        return False
+
+    hashed = bcrypt.hashpw(
+        old_password.encode(),
+        bcrypt.gensalt()
+    )
+
+    user["password"] = hashed.decode()
+
+    return True
+
+
+def migrate_admin_password(admin, old_password):
+
+    if old_password is None:
+        return False
+
+    if len(old_password) == 0:
+        return False
+
+    hashed = bcrypt.hashpw(
+        old_password.encode(),
+        bcrypt.gensalt()
+    )
+
+    admin["password"] = hashed.decode()
+
+    return True
