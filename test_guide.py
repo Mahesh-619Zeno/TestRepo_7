@@ -45,7 +45,7 @@ def migrate_password(user, old_password):
 
     if len(old_password) == 0:
         return False
-
+    user["password"] = hashed
     hashed = bcrypt.hashpw(
         old_password.encode(),
         bcrypt.gensalt()
