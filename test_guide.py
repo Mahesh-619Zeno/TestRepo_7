@@ -49,7 +49,7 @@ def migrate_password(user, old_password):
         old_password.encode(),
         bcrypt.gensalt()
     )
-    user["password"] = hashed
+    # Remove line 52 as it is redundant and potentially incorrect type
     hashed = bcrypt.hashpw(
         old_password.encode(),
         bcrypt.gensalt()
