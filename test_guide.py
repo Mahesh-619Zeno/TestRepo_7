@@ -28,7 +28,12 @@ def authenticate_user(username, password, db):
 
         return False
 
+    except bcrypt.Error as e:
+        logger.error(f"Bcrypt error during authentication: {e}")
+        return False
     except Exception as e:
+        logger.error(f"Unexpected error during authentication: {e}")
+        return False
         logger.exception(f"Authentication failure for user {username}")
         return False
 
