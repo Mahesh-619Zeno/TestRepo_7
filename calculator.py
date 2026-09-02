@@ -1,4 +1,4 @@
-def calculate_total_price(item_price, tax_rate):
+def calculate_total_price1(item_price, tax_rate):
     totalPrice = item_price + (item_price * tax_rate)
     return totalPrice
 
